@@ -20,12 +20,21 @@ use Illuminate\Support\Facades\DB;
  */
 trait MassUpdatable
 {
-    public function getMassUpdateKeyName(): string|array|null
+    /**
+     * @return string|array|null
+     */
+    public function getMassUpdateKeyName()
     {
         return $this->getKeyName();
     }
 
-    public function scopeMassUpdate(Builder $query, array | Arrayable $values, array | string | null $uniqueBy = null): int
+    /**
+     * @param  Builder           $query    
+     * @param  array|Arrayable   $values   
+     * @param  array|string|null $uniqueBy 
+     * @return int
+     */
+    public function scopeMassUpdate(Builder $query, $values, $uniqueBy = null): int
     {
         if (empty($values)) {
             return 0;
@@ -35,7 +44,10 @@ trait MassUpdatable
             throw new EmptyUniqueByException();
         }
 
-        $quoteValue = function (mixed $value) use ($query) {
+        /**
+         * @var mixed $value
+         */
+        $quoteValue = function ($value) use ($query) {
             if (is_null($value)) {
                 return 'NULL';
             }
@@ -222,7 +234,13 @@ trait MassUpdatable
         return $query->update($compiledUpdateStatements);
     }
 
-    public function scopeMassUpdateQuietly(Builder $query, array | Arrayable $values, array | string | null $uniqueBy = null): int
+    /**
+     * @param  Builder           $query    
+     * @param  array|Arrayable   $values   
+     * @param  array|string|null $uniqueBy 
+     * @return int              
+     */
+    public function scopeMassUpdateQuietly(Builder $query,  $values,  $uniqueBy = null): int
     {
         $this->timestamps = false;
 
